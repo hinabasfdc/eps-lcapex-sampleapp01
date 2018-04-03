@@ -1,0 +1,7 @@
+<design:component >
+    <design:attribute name="EinsteinPlatformServices_Account" label="Account"/>
+    <design:attribute name="EinsteinPlatformServices_Key" label="Key"/>
+    <design:attribute name="imageclassification_modelid" label="Image Classification Model Id"/>
+    <design:attribute name="sentiment_modelid" label="Sentiment Model Id"/>
+    <design:attribute name="maximagesize" label="Max Image Size"/>    
+</design:component>

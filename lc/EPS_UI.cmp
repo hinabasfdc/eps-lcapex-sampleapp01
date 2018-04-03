@@ -1,0 +1,102 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="EPS_ApexController">
+    
+    <!-- アカウント情報の定義 -->
+    <aura:attribute name="EinsteinPlatformServices_Account" type="String"/>
+    <aura:attribute name="EinsteinPlatformServices_Key" type="String"/>
+    
+    <!-- Image Classification に関する定数・変数定義 -->
+    <aura:attribute name="imageclassification_modelid" type="String" default="GeneralImageClassifier" />
+    <aura:attribute name="imageclassification_result_columns" type="List"/>
+    <aura:attribute name="imageclassification_result_data" type="Object"/>
+    <aura:attribute name="imageclassification_result_rawtext" type="Object"/>
+    <aura:attribute name="maximagesize" type="Integer" default="960"/>
+    <aura:attribute name="imagedata" type="String" />
+    
+    <!-- Sentiment に関する定数・変数定義 -->
+    <aura:attribute name="sentiment_modelid" type="String" default="CommunitySentiment" />
+    <aura:attribute name="sentiment_text" type="String" />
+    <aura:attribute name="sentiment_result_columns" type="List"/>
+    <aura:attribute name="sentiment_result_data" type="Object"/>
+    <aura:attribute name="sentiment_result_rawtext" type="Object"/>
+    
+    <!-- ローディング中を判別するフラグ -->
+    <aura:attribute name="loaded" type="Boolean" default="true" />    
+    
+    <!-- 初期設定実行関数の呼出 -->    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <lightning:tabset selectedTabId="tab_imageclassification">
+        <!-- Image Classification のタブ  -->
+        <lightning:tab label="Image Classification" id="tab_imageclassification">
+            
+            <!-- 読み込んだ画像を表示するエリア -->
+            <div class="slds-p-around_small slds-text-align_center"  ondrop="{! c.onDrop }" ondragover="{! c.onDragOver }">
+                <img onclick="{! c.rotateImage }" src="{!v.imagedata}"></img>
+            </div>
+            <!-- ファイル読み込みボタンの表示エリア -->
+            <div class="slds-p-around_small slds-text-align_center" >
+                <input class="slds-file-selector__input slds-assistive-text" accept="image/png;image/jpeg" id="file-upload-input-01"  aria-describedby="file-selector-id" type="file" onchange="{! c.loadImage }" />
+                <label class="slds-file-selector__body" for="file-upload-input-01">
+                    <span class="slds-file-selector__button slds-button slds-button_neutral">
+                        Select or Drop Image File / Take Photo
+                    </span>
+                </label>
+            </div>
+            <!-- 予測・解析を実行するボタンの表示エリア -->
+            <div class="slds-text-align_center" >
+                <lightning:button label="Send" iconName="utility:magicwand" iconPosition="left"  variant="brand"  onclick="{! c.getImageClassificationPrediction }" />
+            </div>
+            <!-- 結果を表示するエリア -->
+            <div class="slds-p-around_small" >
+                <!-- 通常表示の場合 -->
+                <aura:if isTrue="{! v.loaded }">
+                    <span class="slds-form-element__label">Results</span>
+                    <!-- 表形式の表示 -->
+                    <lightning:datatable keyField="id"
+                                         data="{! v.imageclassification_result_data }"
+                                         columns="{! v.imageclassification_result_columns }"
+                                         hideCheckboxColumn="true"
+                                         />
+                    <!-- 返り値のJSONをそのまま表示 -->
+                    <lightning:textarea name="imageclassification_output" label="Results(Raw)" value="{!v.imageclassification_result_rawtext}"/>
+                    <!-- サーバー側の関数呼び出し中はローディング表示 -->
+                    <aura:set attribute="else">
+                        <lightning:spinner alternativeText="Loading" />
+                    </aura:set>
+                </aura:if>
+            </div>            
+        </lightning:tab>
+        
+        <!-- Sentiment のタブ -->        
+        <lightning:tab label="Sentiment" id="tab_sentiment">
+            <!-- 予測・解析させたいテキストの入力エリア -->
+            <div class="slds-p-around_small" >
+                <lightning:textarea aura:id="form"  name="textarea" required="true" label="Text" value="{!v.sentiment_text}" />
+            </div>
+            <!-- 予測・解析を実行するボタンの表示エリア -->
+            <div class="slds-text-align_center">
+                <lightning:button label="Send" iconName="utility:magicwand" iconPosition="left"  variant="brand"  onclick="{! c.getSentiment }" />
+            </div>
+            <!-- 結果を表示するエリア -->
+            <div class="slds-p-around_small" >
+                <!-- 通常表示の場合 -->
+                <aura:if isTrue="{! v.loaded }">
+                    <span class="slds-form-element__label">Results</span>
+                    <!-- 表形式の表示 -->
+                    <lightning:datatable keyField="id"
+                                         data="{! v.sentiment_result_data }"
+                                         columns="{! v.sentiment_result_columns }"
+                                         hideCheckboxColumn="true"
+                                         />
+                    <!-- 返り値のJSONをそのまま表示 -->
+                    <lightning:textarea name="sentiment_output" label="Results(Raw)" value="{!v.sentiment_result_rawtext}"/>
+                    <!-- サーバー側の関数呼び出し中はローディング表示 -->
+                    <aura:set attribute="else">
+                        <lightning:spinner alternativeText="Loading" />
+                    </aura:set>
+                </aura:if>
+            </div>            
+        </lightning:tab>
+    </lightning:tabset>
+    
+</aura:component>
