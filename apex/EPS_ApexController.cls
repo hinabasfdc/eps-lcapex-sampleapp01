@@ -57,9 +57,11 @@ public class EPS_ApexController {
                 //JSON形式の返り値を扱いやすいようにクラスにパース
                 EPS_PredictionResult predictionresult = EPS_PredictionResult.parse(retval);                
                 //結果が0件でなければオブジェクトにレコードを保存する関数を呼出
+                /*
                 if(!predictionresult.probabilities.isEmpty()){
                     createRecord(predictiontype, modelId, 'Vision', retval, base64img, predictionresult.probabilities[0].label);
                 }
+                */
             }
         } catch(System.CalloutException e) {
             //Exceptionをキャッチした場合はログに出力し、結果格納用変数にエラーメッセージを格納
@@ -113,9 +115,11 @@ public class EPS_ApexController {
                 EPS_PredictionResult predictionresult = EPS_PredictionResult.parse(retval);
                 //オブジェクトにレコードを保存する関数を呼出
                 //結果が0件でなければオブジェクトにレコードを保存する関数を呼出
+                /*
                 if(!predictionresult.probabilities.isEmpty()){
                     createRecord(predictiontype, modelId, text, retval, '', predictionresult.probabilities[0].label);
                 }
+                */
             }
         } catch(System.CalloutException e) {
             //Exceptionをキャッチした場合はログに出力し、結果格納用変数にエラーメッセージを格納
@@ -130,6 +134,7 @@ public class EPS_ApexController {
     /*
 * オブジェクトに結果を格納する関数
 */
+/*
     private static void createRecord(String predictiontype, String modelId, String originaltext, String results, String base64img, String firstlabel) {
         
         //オブジェクトの型を取得し値を格納
@@ -166,6 +171,7 @@ public class EPS_ApexController {
             insert cdl;
         }
     }
+*/
     
     /* ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 * 以下は共通機能セクション
